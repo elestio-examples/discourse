@@ -47,5 +47,5 @@ lifeCycleConfig:
 webUI:
   - url: "https://[CI_CD_DOMAIN]"
     label: "Discourse Admin"
-    login: "[ADMIN_EMAIL]"
+    login: "root"
     password: "[ADMIN_PASSWORD]"

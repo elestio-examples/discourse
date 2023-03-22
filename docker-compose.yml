@@ -17,7 +17,7 @@ services:
     volumes:
       - './redis_data:/bitnami/redis'
   discourse:
-    image: docker.io/bitnami/discourse:3
+    image: docker.io/bitnami/discourse:latest
     ports:
       - '172.17.0.1:3080:3000'
     volumes:
@@ -28,7 +28,7 @@ services:
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
-      - DISCOURSE_HOST=www.example.com
+      - DISCOURSE_HOST=${DOMAIN}
       - DISCOURSE_DATABASE_HOST=postgresql
       - DISCOURSE_DATABASE_PORT_NUMBER=5432
       - DISCOURSE_DATABASE_USER=bn_discourse
@@ -45,7 +45,7 @@ services:
       - DISCOURSE_SMTP_PORT=${SMTP_PORT}
       - DISCOURSE_SMTP_AUTH=${SMTP_AUTH}
   sidekiq:
-    image: docker.io/bitnami/discourse:3
+    image: docker.io/bitnami/discourse:latest
     depends_on:
       - discourse
     volumes:

@@ -13,5 +13,5 @@ Deploy Discourse server with CI/CD on Elestio
 You can can open Discourse UI here:
 
     URL: https://[CI_CD_DOMAIN]
-    email:[ADMIN_EMAIL]
+    login: root
     password: [ADMIN_PASSWORD]
