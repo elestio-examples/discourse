@@ -10,7 +10,7 @@ Deploy Discourse server with CI/CD on Elestio
 
 # Once deployed ...
 
-# Note:- It will take 3 to 5 minutes to start up after deployment..
+Note:- It will take 3 to 5 minutes to start up after deployment..
 
 You can can open Discourse UI here:
 
