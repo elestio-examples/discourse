@@ -1,6 +1,7 @@
 version: '2'
 services:
   postgresql:
+    restart: always
     image: docker.io/bitnami/postgresql:15
     volumes:
       - './postgresql_data:/bitnami/postgresql'
@@ -10,6 +11,7 @@ services:
       - POSTGRESQL_USERNAME=bn_discourse
       - POSTGRESQL_DATABASE=bitnami_discourse
   redis:
+    restart: always
     image: docker.io/bitnami/redis:7.0
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -17,6 +19,7 @@ services:
     volumes:
       - './redis_data:/bitnami/redis'
   discourse:
+    restart: always
     image: docker.io/bitnami/discourse:latest
     ports:
       - '172.17.0.1:3080:3000'
@@ -45,6 +48,7 @@ services:
       - DISCOURSE_SMTP_PORT=${SMTP_PORT}
       - DISCOURSE_SMTP_AUTH=${SMTP_AUTH}
   sidekiq:
+    restart: always
     image: docker.io/bitnami/discourse:latest
     depends_on:
       - discourse
