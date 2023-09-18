@@ -1,46 +1,83 @@
-version: "3.9"
-
+version: '3.3'
 services:
-  postgres:
-    image: postgres:14
+  discourse-app:
+    container_name: discourse-app
+    image: tiredofit/discourse:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.discourse-example-org.rule=Host(`${DOMAIN}`)
+      - traefik.http.services.discourse-example-org.loadbalancer.server.port=3000
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./logs:/data/logs
+      - ./data/uploads:/data/uploads
+      - ./data/backups:/data/backups
     environment:
-      - POSTGRES_USER=discourse
-      - POSTGRES_PASSWORD=discourse
+      - TIMEZONE=America/Vancouver
+      - CONTAINER_NAME=discourse-app
+      - DB_HOST=discourse-db
+      - DB_NAME=discourse
+      - DB_USER=discourse
+      - DB_PASS=password
+      - REDIS_HOST=discourse-redis
+      - SITE_HOSTNAME=${DOMAIN}
+      - SMTP_PORT=25
+      - SMTP_HOST=postfix-relay
+    restart: always
+    networks:
+      - proxy
+      - services
+
+  discourse-db:
+    container_name: discourse-db
+    image: tiredofit/postgres:15-latest
+    restart: always
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - TIMEZONE=America/Vancouver
+      - CONTAINER_NAME=discourse-db
+
       - POSTGRES_DB=discourse
+      - POSTGRES_USER=discourse
+      - POSTGRES_PASSWORD=password
     networks:
-      - discourse
+      - services
 
-  redis:
-    image: redis:7
+  discourse-redis:
+    image: tiredofit/redis:7
+    container_name: discourse-example-org-redis
     volumes:
-      - ./redis:/data
+      - ./redis:/var/lib/redis
+    environment:
+      - TIMEZONE=America/Vancouver
+      - CONTAINER_NAME=discourse-redis
     networks:
-      - discourse
+      - services
+    restart: always
 
-  sidekiq:
-    image: s-dis-dev
-    # command: bundle exec sidekiq -q critical,low,default -d -l log/sidekiq.log
+  discourse-db-backup:
+    image: tiredofit/db-backup
+    container_name: discourse-db-backup
     volumes:
-      - ./discourse:/var/discourse
-    depends_on:
-      - postgres
-      - redis
+      - ./dbbackup:/backup
+    environment:
+      - TIMEZONE=America/Vancouver
+      - CONTAINER_NAME=discourse-db-backup
+      - DB_HOST=discourse-db
+      - DB_TYPE=postgres
+      - DB_NAME=discourse
+      - DB_USER=discourse
+      - DB_PASS=password
+      - DB_DUMP_FREQ=1440
+      - DB_DUMP_BEGIN=0000
+      - DB_CLEANUP_TIME=8640
     networks:
-      - discourse
+      - services
+    restart: always
 
-  discourse:
-    image: s-dis-dev
-    # command: bundle exec rails s -p 3000 -b 0.0.0.0
-    volumes:
-      - ./discourse:/var/discourse
-    depends_on:
-      - postgres
-      - redis
-      - sidekiq
-    networks:
-      - discourse
 
 networks:
-  discourse:
+  proxy:
+    external: true
+  services:
+    external: true
