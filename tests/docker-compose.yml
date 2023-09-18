@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=discourse
+      - POSTGRES_PASSWORD=discourse
+      - POSTGRES_DB=discourse
+    networks:
+      - discourse
+
+  redis:
+    image: redis:7
+    volumes:
+      - ./redis:/data
+    networks:
+      - discourse
+
+  sidekiq:
+    image: s-dis-dev
+    # command: bundle exec sidekiq -q critical,low,default -d -l log/sidekiq.log
+    volumes:
+      - ./discourse:/var/discourse
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - discourse
+
+  discourse:
+    image: s-dis-dev
+    # command: bundle exec rails s -p 3000 -b 0.0.0.0
+    volumes:
+      - ./discourse:/var/discourse
+    depends_on:
+      - postgres
+      - redis
+      - sidekiq
+    networks:
+      - discourse
+
+networks:
+  discourse:
