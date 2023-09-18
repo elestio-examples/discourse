@@ -2,7 +2,7 @@ version: '3.3'
 services:
   discourse-app:
     container_name: discourse-app
-    image: tiredofit/discourse:latest
+    image: elestio4test/discourse:latest
     labels:
       - traefik.enable=true
       - traefik.http.routers.discourse-example-org.rule=Host(`${DOMAIN}`)
