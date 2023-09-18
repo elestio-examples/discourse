@@ -74,10 +74,6 @@ services:
     networks:
       - services
     restart: always
-
-
 networks:
   proxy:
-    external: true
   services:
-    external: true
