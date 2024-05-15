@@ -23,7 +23,7 @@ services:
     restart: always
     image: docker.io/bitnami/discourse:3.1.3
     ports:
-      - '172.17.0.1:3080:3000'
+      - '172.17.0.1:3000:3000'
     volumes:
       - './discourse_data:/bitnami/discourse'
     depends_on:
