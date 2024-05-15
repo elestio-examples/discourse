@@ -2,12 +2,14 @@ ports:
   - protocol: "HTTPS"
     targetProtocol: "HTTP"
     listeningPort: "443"
-    targetPort: "3080"
+    targetPort: "3000"
     targetIP: "172.17.0.1"
     public: true
     path: "/"
     isAuth: false
 environments:
+  - key: "SOFTWARE_VERSION_TAG"
+    value: "3.1.3"
   - key: "ADMIN_PASSWORD"
     value: "random_password"
   - key: "ADMIN_EMAIL"
@@ -26,7 +28,6 @@ environments:
     value: "root"
   - key: "DISCOURSE_PASSWORD"
     value: "random_password"
-
 config:
   runTime: "dockerCompose"
   version: ""
