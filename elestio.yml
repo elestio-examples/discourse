@@ -9,7 +9,7 @@ ports:
     isAuth: false
 environments:
   - key: "SOFTWARE_VERSION_TAG"
-    value: "latest"
+    value: "3.2.3"
   - key: "ADMIN_PASSWORD"
     value: "random_password"
   - key: "ADMIN_EMAIL"
